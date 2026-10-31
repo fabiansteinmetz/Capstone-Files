@@ -1,0 +1,14 @@
+nohup: no se tendrá en cuenta la entrada
+===============================
+NVT1 — 4 ns, fixed volume
+Start time: dom 27 set 2026 09:09:36 -03
+End time: dom 27 set 2026 11:01:22 -03
+Elapsed time: 01:51:46 (6706 seconds)
+===============================
+NPT — 7 ns, pressure equilibration
+Start time: dom 27 set 2026 11:01:22 -03
+End time: dom 27 set 2026 15:12:32 -03
+Elapsed time: 04:11:10 (15070 seconds)
+===============================
+NVT2 — 4 ns, production
+Start time: dom 27 set 2026 15:12:32 -03

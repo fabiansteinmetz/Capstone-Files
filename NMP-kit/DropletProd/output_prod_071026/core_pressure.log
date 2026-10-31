@@ -1,0 +1,39 @@
+PSF: 5680 molecules x 16 atoms, molar mass 99.13 g/mol, net charge -0.0000 e
+LJ parameters used (type  eps  Rmin/2):
+   CG331      0.0780  2.0500
+   HGA3       0.0240  1.3400
+   NG2R53     0.2000  1.8500
+   CG3C52     0.0600  2.0200
+   HGA2       0.0350  1.3400
+   CG2R53     0.0200  2.2000
+   OG2D1      0.1200  1.7000
+DCD: 200 frames, unit cell yes; analysing 200 frames
+periodic box [300. 300. 300.] A (minimum image used)
+largest atom-COM distance 3.08 A -> LJ is complete for rcut >= 18.2 A
+  frame      0  (1/200)  pairs   218594    6.5 s/frame  P =   -149.9 bar   elapsed    0.1 min
+  frame     19  (20/200)  pairs   220295    6.8 s/frame  P =    -56.3 bar   elapsed    0.3 min
+  frame     39  (40/200)  pairs   221760    6.9 s/frame  P =    126.0 bar   elapsed    0.6 min
+  frame     59  (60/200)  pairs   214946    7.6 s/frame  P =   -371.6 bar   elapsed    0.9 min
+  frame     79  (80/200)  pairs   220704    7.5 s/frame  P =    536.5 bar   elapsed    1.2 min
+  frame     99  (100/200)  pairs   220937    7.9 s/frame  P =   -275.5 bar   elapsed    1.6 min
+  frame    119  (120/200)  pairs   218873    8.2 s/frame  P =   -150.1 bar   elapsed    1.9 min
+  frame    139  (140/200)  pairs   221838    8.6 s/frame  P =    172.7 bar   elapsed    2.3 min
+  frame    159  (160/200)  pairs   221283    9.3 s/frame  P =    562.1 bar   elapsed    2.6 min
+  frame    179  (180/200)  pairs   219438    9.2 s/frame  P =    127.7 bar   elapsed    3.0 min
+  frame    199  (200/200)  pairs   219361    8.0 s/frame  P =    243.3 bar   elapsed    3.4 min
+
+=========== RESULT ===========
+frames: 200   core radius 25.0 A   molecular cutoff 30.0 A
+core density   rho = 0.9802 +/- 0.0019 g/cm3
+P_xx          =     131.1 +/-   13.6 bar
+P_yy          =      92.6 +/-   22.0 bar
+P_zz          =     104.0 +/-   22.6 bar
+P (trace/3)   =     109.2 +/-   15.7 bar   <-- pressure in the core = Laplace pressure (vacuum outside)
+   kinetic 246.6, LJ 1528.2, Coulomb -1665.6 bar
+per-frame std of P: 247 bar
+convergence vs molecular cutoff (should flatten out):
+   rcut   15 A :     128.1 bar
+   rcut   20 A :     114.5 bar
+   rcut   25 A :     110.0 bar
+   rcut   30 A :     109.2 bar
+files: core_pressure_frames.dat, core_pressure_cutoff.dat

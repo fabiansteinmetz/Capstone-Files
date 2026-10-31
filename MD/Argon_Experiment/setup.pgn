@@ -1,0 +1,6 @@
+ resetpsf 
+ topology argon_toppar.str
+ segment ARG {pdb  argon.pdb } 
+ coordpdb argon.pdb ARG 
+ writepsf ARG.psf 
+ writepdb ARG.pdb

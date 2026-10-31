@@ -1,0 +1,220 @@
++--------------------------------------------------------------------+
+|                                                                    |
+|                  NAMD 3.0.3 Release Announcement                   |
+|                                                                    |
++--------------------------------------------------------------------+
+
+                                                         July 23, 2026
+
+The Theoretical and Computational Biophysics Group at the University of
+Illinois is proud to announce the public release of a new version of
+NAMD, a parallel, object-oriented molecular dynamics code designed for
+high-performance simulation of large biomolecular systems.  NAMD is
+distributed free of charge and includes source code.  NAMD development
+is supported by the NIH National Institute of General Medical Sciences
+through grant numbers NIH P41-GM104601 and NIH R24-GM145965.
+
+NAMD 3.0.3 is a point release of 3.0 including the following improvements:
+
+- Fix a bug of incorrect wrapping of spinAngle in Colvars that affects
+  eABF and any other methods relying on extended Lagrangian dynamics.
+
+- Fix crash when using GBIS in the GPU-offload mode.
+
+NAMD 3.0.2 is a point release of 3.0 including the following improvements:
+
+- Fix recently discovered errors in the calculation of applied forces of
+  the following collective variables (CVs) in Colvars: "eigenvector" with
+  rotational fitting enabled, "distanceZ" with dynamic axis enabled,
+  "orientationAngle", "orientation", and "coordNum" or "selfCoordNum"
+  with pairlist.  Previously, restraints along those CVs using Colvars
+  may be ineffective, i.e., producing a trajectory inconsistent with the
+  restraint, or causing otherwise unexpected results.  Below are details:
+
+  - "eigenvector" with rotational fitting:  The gradients with respect to
+    the fitting group (fit gradients), which are normally enabled for all
+    CVs, were disabled by default for eigenvector.  However, numerical
+    tests show that these fit gradients cannot be ignored (see
+    https://github.com/Colvars/colvars/pull/828).  This issue does not
+    affect calculations of eigenvector when the keyword rotateToReference
+    is disabled, or of other CVs irrespective of rotational fitting.
+
+  - "orientation" and "orientationAngle":  Because the two quaternions
+    q and -q represent identical orientations, Colvars uses the convention
+    that the first component q0 >= 0, flipping the sign if needed from the
+    calculated quaternion to simplify analysis of trajectories.  However,
+    the same correction was not applied to the gradients
+    (https://github.com/Colvars/colvars/issues/827), resulting in
+    inconsistently applied forces over a simulation.  This issue *does not*
+    affect the other rotational CVs (orientationProj, tilt, spinAngle,
+    eulerPhi, eulerTheta, eulerPsi).
+
+  - "coordNum" and "selfCoordNum" with pairlist:  When using these two
+    types of coordination number with pairlist enabled, a factor was
+    missing when calculating the gradients of the switching function with
+    respect to the atomic coordinates.  Note that the relative errors
+    between the wrong and correct gradients are linearly correlated with
+    the pairlist tolerance.  For example, a pairlist tolerance of 0.01
+    could make the gradients 1% smaller or larger than the correct results.
+    This issue has been fixed (https://github.com/Colvars/colvars/pull/831)
+    and is specific to the pairlist, i.e., does not occur when the
+    parameter "tolerance" is 0 (default).
+
+  - "distanceZ" with dynamic axis:  When defining an optional "ref2" group,
+    the reference axis is dynamically defined as the distance vector
+    between "ref" and "ref2".  The gradients with respect to the dynamic
+    axis were incorrectly calculated and have now been fixed
+    (https://github.com/Colvars/colvars/pull/838).  The issue *does not*
+    affect calculations when the axis is explicitly given using the
+    keyword "axis", or when it is omitted to use the default axis (0,0,1).
+
+  The above bugs may affect your simulations only if you are using Colvars
+  to apply biasing forces along the above CVs with the specified options.
+  For that purpose, you should update to the latest bugfix release of NAMD
+  (e.g. NAMD 3.0.2), which contains a version of Colvars updated for those
+  bugfixes.  Note: because VMD does not apply forces to atoms, calculations
+  of the above variables from a pre-existing trajectory are still reliable
+  even without the bugfix.
+
+- Fix crash when using volumetric mapped-based CVs in Colvars.
+
+- Fix bug affecting GPU-resident SMD whenever the selection size is greater
+  than or equal to 1024 atoms.
+
+- Fix bug affecting the use of GPUAtomMigration with MonteCarloPressure,
+  in which the atom map was not being correctly updated.
+
+- Fix builds for AMD HIP ROCm.
+
+NAMD 3.0.1 is a point release of 3.0 including the following improvements:
+
+- Fix bug affecting pressure tensor calculation when running GPU-resident
+  mode with multiple time stepping enabled. Although the resulting error
+  introduced was small, it was sufficient to change the area per lipid in
+  membrane simulations.
+
+- Fix crashes from builds using CUDA 12.5 and higher when running in
+  GPU-resident mode.
+
+- Fix bug in supporting PME with multiple GPU devices, triggered when
+  running GPU-offload mode across more than 7 devices.
+
+- Update to Colvars, fixing some bugs and behaviors for specialized
+  Colvars features.
+
+- Fix colinear lonepair calculation and contribution to pressure tensor.
+
+- Fix crashes when trying to use GPUAtomMigration for multi-GPU
+  simulation for HIP builds (e.g. OLCF Frontier).
+
+NAMD 3.0 has many advantages over NAMD 2.14, including:
+
+- GPU-resident mode providing very fast dynamics:
+
+  - Achieves 2x or more speedup on single GPU versus GPU-offload mode,
+    and 7x or more speedup for multi-GPU scaling on NVIDIA DGX-A100 
+    versus GPU-offload mode
+
+  - Supports single GPU and single-node multi-GPU scaling for
+    tightly coupled GPUs (e.g. NVLink-enabled architectures like DGX)
+
+  - Improved performance for small systems (e.g., 23.6k atom DHFR benchmark
+    using hydrogen mass repartitioning with AMBER force field parameters
+    can achieve over 1 microsecond/day simulation rates on NVIDIA A100)
+
+  - Supports essential dynamics simulation protocols:
+    constant energy, thermostats, barostats, rigid bond constraints, 
+    multiple time stepping, PME
+
+  - Supports standard TIP3P and advanced 4-site water models (TIP4P and OPC)
+
+  - Supports minimize and run directives through TCL scripting
+
+  - Supports several advanced features:
+    replica-exchange MD, alchemical free energy methods (FEP & TI),
+    REST2, harmonic restraints, external electric field, SMD, Colvars, 
+    TCL forces, Monte Carlo barostat, group position restraints,
+    constant pH MD
+
+- GPU-accelerated alchemical free energy methods (FEP & TI)
+  for both GPU-offload and GPU-resident modes
+
+  - Supports van der Waals force switching for alchemy on both GPU modes
+
+- HIP kernel improvements for better performance on AMD GPUs
+
+- CPU-vectorization mode compatible with Intel and AMD CPU models 
+  that support AVX-512 instructions
+
+  - Achieves speedup of up to 1.8x on Intel Xeon over AVX2 builds
+
+  - Exhibits good scaling on TACC Frontera supercomputer
+
+- Extend REST2 force field compatibility
+
+- Update Colvars to version 2024-06-04
+
+- Update user guide documentation for GPU-resident mode
+
+- Fix several long-standing issues
+
+  - Fix CPU memory leaks
+
+  - Fix race conditions running GPU-resident mode with Colvars or TCL forces
+
+  - Fix GPU-resident mode running constant pressure with harmonic restraints
+
+  - Fix race conditions and NaNs running alchemy on GPU
+
+  - Fix using advanced features together with GPU atom migration
+
+  - Implement moving averages for GPU-resident reduction averages
+
+  - Update config file parameters to use "GPU" rather than "CUDA" naming
+
+  - Improve guard against running GPU-resident with unsupported features
+
+- Update Psfgen to version 2.0
+
+  - Fix compatibility with constant-pH MD
+
+- Update to TCL version 8.6.13 for GPU-resident with Colvars and TCL forces
+
+- Update to Charm++ 8.0.0, enabling:
+
+  - Updated implementation of atomics, locks, and fences to use
+    C++11/C11 versions where suitable
+
+  - Improved performance, support, and fixes for UCX
+
+  - Improved scaling on InfiniBand via ucx network layer
+
+  - Improved multi-copy on POWER via pamilrts network layer
+
+  - Clean exit with non-zero status for many failures
+
+  - Improved scaling on HPE/Cray Slingshot 11 via ofi network layer
+
+- Support for CUDA versions 9.1-12.x on NVIDIA Maxwell or newer GPUs
+
+- Support for HIP/ROCm versions 6.x on AMD Instinct MI100 and MI200 Series GPUs
+
+Details at http://www.ks.uiuc.edu/Research/namd/3.0/features.html
+
+Benchmarks at https://www.ks.uiuc.edu/Research/namd/benchmarks/
+
+NAMD is available from http://www.ks.uiuc.edu/Research/namd/
+
+For your convenience, NAMD has been ported to and will be installed
+on the machines at the NSF-sponsored national supercomputing centers.
+If you are planning substantial simulation work of an academic nature
+you should apply for these resources.  Benchmarks for your proposal
+are available at http://www.ks.uiuc.edu/Research/namd/performance.html
+
+The Theoretical and Computational Biophysics Group encourages NAMD users
+to be closely involved in the development process through reporting
+bugs, contributing fixes, periodical surveys and via other means.
+Questions or comments may be directed to namd@ks.uiuc.edu.
+
+We are eager to hear from you, and thank you for using our software!
+

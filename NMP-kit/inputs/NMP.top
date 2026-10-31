@@ -1,0 +1,47 @@
+* NMP standalone topology for VMD Solvate/psfgen
+* Residue generated with CGenFF program 4.0 for CGenFF topology/parameters 5.0
+*
+36 1
+
+! Atom types required by the NMP residue.
+! These MASS definitions make this topology self-contained for psfgen.
+MASS  -1  HGA2       1.00800 H  ! aliphatic proton, CH2
+MASS  -1  HGA3       1.00800 H  ! aliphatic proton, CH3
+MASS  -1  CG2R53    12.01100 C  ! 5-membered ring carbonyl carbon
+MASS  -1  CG331     12.01100 C  ! aliphatic methyl carbon
+MASS  -1  CG3C52    12.01100 C  ! 5-membered ring aliphatic CH2
+MASS  -1  NG2R53    14.00700 N  ! amide N in 5-membered non-sp2 ring
+MASS  -1  OG2D1     15.99940 O  ! carbonyl oxygen
+
+DEFA FIRS NONE LAST NONE
+AUTO ANGLES DIHE
+
+RESI NMP            0.000 ! param penalty=1.500; charge penalty=0.933
+GROUP
+ATOM C1     CG331  -0.161
+ATOM H1     HGA3    0.090
+ATOM H2     HGA3    0.090
+ATOM H3     HGA3    0.090
+ATOM N2     NG2R53 -0.098
+ATOM C3     CG3C52 -0.077
+ATOM H4     HGA2    0.090
+ATOM H5     HGA2    0.090
+ATOM C4     CG3C52 -0.233
+ATOM H6     HGA2    0.090
+ATOM H7     HGA2    0.090
+ATOM C5     CG3C52 -0.027
+ATOM H8     HGA2    0.090
+ATOM H9     HGA2    0.090
+ATOM C6     CG2R53  0.286
+ATOM O7     OG2D1  -0.500
+
+BOND C1 H1  C1 H2  C1 H3  C1 N2
+BOND N2 C3  N2 C6
+BOND C3 H4  C3 H5  C3 C4
+BOND C4 H6  C4 H7  C4 C5
+BOND C5 H8  C5 H9  C5 C6
+DOUBLE C6 O7
+IMPR C6 C5 N2 O7
+
+PATCHING FIRS NONE LAST NONE
+END
